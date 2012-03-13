@@ -18,7 +18,7 @@
                      ["https://github.com/brentonashworth/one.git"
                       "6129d57fb0d63146a0f36eacb48498afe814a222"]]
   :repl-init cljs-todo.repl
-  :source-path "src/app/clj"
+  :source-path "src/clj"
   :extra-classpath-dirs [".lein-git-deps/clojurescript/src/clj"
                          ".lein-git-deps/clojurescript/src/cljs"
                          ".lein-git-deps/domina/src/cljs"
