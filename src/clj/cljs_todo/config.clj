@@ -16,6 +16,7 @@
           :prod-js-file-name "mainp.js"
           :dev-js ["goog.require('cljs_todo.core');"
                    "goog.require('cljs_todo.model');"
+                   "goog.require('cljs_todo.view');"
                    "goog.require('cljs_todo.controller');"
                    "goog.require('cljs_todo.history');"
                    "goog.require('cljs_todo.logging');"
