@@ -1,6 +1,9 @@
-# cljs-todo
+## cljs-todo
 
-FIXME: write description
+A simple do list based on ClojurescriptOne.  I originally wrote this code by 
+modifying the existing ClojurescriptOne, but I wanted to pull it out into a
+standalone project to get a better sense for how much of the code is specific
+to my application.
 
 ## Usage
 
