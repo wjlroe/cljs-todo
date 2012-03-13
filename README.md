@@ -7,7 +7,14 @@ to my application.
 
 ## Usage
 
-FIXME: write
+Getting started should work just like [getting started with ClojurescriptOne](http://clojurescriptone.com/getting-started.html)
+
+```bash
+git clone git@github.com:calebphillips/cljs-todo.git
+cd cljs-todo
+lein bootstrap 
+lein repl
+```
 
 ## License
 
