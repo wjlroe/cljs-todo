@@ -30,6 +30,4 @@
                          "src/clj"
                          "src/cljs"
                          "src/cljs-macros"
-                         "templates"]
-
-  )
+                         "templates"])
