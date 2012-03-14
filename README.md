@@ -5,12 +5,13 @@ modifying the existing ClojurescriptOne, but I wanted to pull it out into a
 standalone project to get a better sense for how much of the code is specific
 to my application.
 
-Quick break down of app specific code:
+A good portion of the code from the sample app did not need to be changed, so here is a 
+quick break down of app specific code:
 
 * **src/clj** - Majority copied directly from the sample app.  **api.clj** and **config.clj** have significant changes.
-* **src/cljs-macros** - Changed enlive templates to reflect different html layout.
+* **src/cljs-macros** - Changed enlive snippets to reflect different html layout.
 * **src/cljs** - This is where most of the changes took place.  history.clj and logging.clj were not changed.
-* **src/leiningen** - Direct copy
+* **src/leiningen** - Direct copy. Provides lein support for git dependencies, etc.
 
 ## Usage
 
