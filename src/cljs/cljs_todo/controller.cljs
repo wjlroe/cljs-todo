@@ -50,7 +50,6 @@
                   (fn [old-state]
                     (update-in old-state [:list] conj %)))))
 
-;; Not working - events are getting sent to this incorrectly, I believe.
 (defmethod action :update-task [{:keys [old new]}]
   (r-post :update-task {:task new}
           #(swap! task-list
