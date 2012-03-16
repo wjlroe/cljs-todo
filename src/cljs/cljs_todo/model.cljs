@@ -61,6 +61,14 @@
              (doseq [[evt-id data] (tl-change->events o n)]
                (dispatch/fire evt-id data))))
 
+(defn load-task-list! [list]
+  (reset! task-list {:state :loaded :list (:task-list list)}))
+
+(defn update-task-list! [f & args]
+  (swap! task-list
+         (fn [old-state]
+           (apply update-in old-state [:list] f args))))
+
 (defmulti ^:private new-status
   "Determine the new :status of a form input field based on:
     1) its preivous status

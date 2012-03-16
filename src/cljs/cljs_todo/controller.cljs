@@ -2,7 +2,7 @@
   application state."}
   cljs-todo.controller
   (:use [one.browser.remote :only (request)]
-        [cljs-todo.model :only (state task-list)])
+        [cljs-todo.model :only (state load-task-list! update-task-list!)])
   (:require [cljs.reader :as reader]
             [clojure.browser.event :as event]
             [one.dispatch :as dispatch]
@@ -40,23 +40,16 @@
 (def r-post (partial remote "POST"))
 (def r-get  (partial remote "GET"))
 
-(defmethod action :init [_]
+m(defmethod action :init [_]
   (reset! state {:state :init})
-  (r-get :list-tasks {} #(reset! task-list {:state :loaded :list (:task-list %)})))
+  (r-get :list-tasks {} load-task-list!))
 
 (defmethod action :add-task [{task :task}]
-  (r-post :add-task {:task task}
-          #(swap! task-list
-                  (fn [old-state]
-                    (update-in old-state [:list] conj %)))))
+  (r-post :add-task {:task task} #(update-task-list! conj %)))
 
 (defmethod action :update-task [{:keys [old new]}]
   (r-post :update-task {:task new}
-          #(swap! task-list
-                  (fn [old-state]
-                    (update-in old-state
-                               [:list]
-                               (fn [ls] (replace {old %} ls)))))))
+          #(update-task-list! (fn [ls] (replace {old %} ls)))))
 
 (dispatch/react-to #{:init :add-task :update-task}
                    (fn [t d] (action (assoc d :type t))))
