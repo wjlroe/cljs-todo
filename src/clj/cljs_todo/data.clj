@@ -23,6 +23,12 @@
            :db/valueType :db.type/boolean
            :db/cardinality :db.cardinality/one
            :db.install/_attribute :db.part/db}
+
+          {:db/id (d/tempid :db.part/db)
+           :db/ident :task/id
+           :db/valueType :db.type/long
+           :db/cardinality :db.cardinality/one
+           :db.install/_attribute :db.part/db}
           ])
 
 (defn create-db []
@@ -30,20 +36,37 @@
   (let [conn (d/connect uri)]
     @(d/transact conn schema)))
 
+(defonce ^:dynamic *task-id* (atom 10000))
+(defn- next-id [] (swap! *task-id* inc))
+
+(defn- id->eid [id]
+  (ffirst
+   (d/q '[:find ?t
+          :in $ ?i
+          :where
+          [?t :task/id ?i]] (d/db (d/connect uri)) id)))
+
 (defn save-task [t]
-  @(d/transact
-    (d/connect uri)
-    (let [id (or (:id t)
-                 (d/tempid :db.part/user))]
-      (map (fn [[k v]] {:db/id id k v})
-           {:task/description (:description t)
-            :task/complete (boolean (:complete t))}))))
+  (let [id (or (:id t)
+                 (next-id))
+          entity-id (if (:id t)
+                      (id->eid (:id t))
+                      (d/tempid :db.part/user))]
+      @(d/transact
+        (d/connect uri)
+        (map (fn [[k v]] {:db/id entity-id k v})
+             {:task/description (:description t)
+              :task/complete (boolean (:complete t))
+              :task/id id}))
+      (assoc t :id id)))
 
 (defn list-tasks []
-  (map (fn [[id d c]] {:id id :description d :complete c})
-       (d/q '[:find ?t ?d ?c
-              :where
-              [?t :task/description ?d]
-              [?t :task/complete ?c]]
-            (d/db (d/connect uri)))))
+  (sort (fn [a b] (compare (:id a) (:id b)))
+        (map (fn [[id d c]] {:id id :description d :complete c})
+             (d/q '[:find ?i ?d ?c
+                    :where
+                    [?t :task/id ?i]
+                    [?t :task/description ?d]
+                    [?t :task/complete ?c]]
+                  (d/db (d/connect uri))))))
 
