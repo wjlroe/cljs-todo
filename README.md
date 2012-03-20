@@ -1,6 +1,6 @@
 ## cljs-todo
 
-A simple do list based on Clojurescript One.  I originally wrote this code by 
+A simple to-do list based on Clojurescript One.  I originally wrote this code by 
 modifying the existing Clojurescript One, but I wanted to pull it out into a
 standalone project to get a better sense for how much of the code is specific
 to my application.  The Datomic integration might be a bit of a digression, but it's 
