@@ -24,5 +24,6 @@
           :prod-js ["cljs_todo.core.start();"]
           :reload-clj ["/cljs_todo/api"
                        "/cljs_todo/config"
-                       "/cljs_todo/dev_server"]
+                       "/cljs_todo/dev_server"
+                       "/cljs_todo/data"]
           :prod-transform production-transform})

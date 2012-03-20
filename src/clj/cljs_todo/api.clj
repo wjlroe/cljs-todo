@@ -1,14 +1,8 @@
 (ns cljs-todo.api
   "The server side of the application. Provides a simple API for
   updating an in-memory database."
-  (:use [compojure.core :only (defroutes ANY)]))
-
-(defonce ^:dynamic *task-list* (atom []))
-
-(defonce ^:dynamic *task-id* (atom 10000))
-
-(defn- next-id []
-  (swap! *task-id* inc))
+  (:use [compojure.core :only (defroutes ANY)])
+  (:require [cljs-todo.data :as d]))
 
 (defmulti remote
   "Multimethod to handle incoming API calls. Implementations are
@@ -23,20 +17,13 @@
   {:status :error :message "Unknown endpoint."})
 
 (defmethod remote :add-task [data]
-  (let [t (assoc (-> data :args :task) :id (next-id))]
-    (swap! *task-list* conj t)
-    t))
+  (d/save-task (-> data :args :task)))
 
 (defmethod remote :update-task [data]
-  (let [new-t (-> data :args :task)]
-    (swap! *task-list*
-           (fn [old-list]
-             (let [old-t (first (filter #(= (:id %) (:id new-t)) old-list))]
-               (replace {old-t (merge old-t new-t)} old-list))))
-    new-t))
+  (d/save-task (-> data :args :task)))
 
 (defmethod remote :list-tasks [data]
-  {:task-list @*task-list*})
+  {:task-list (d/list-tasks)})
 
 (defroutes remote-routes
   (ANY "/remote" {{data "data"} :params}

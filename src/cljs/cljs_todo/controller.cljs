@@ -40,7 +40,7 @@
 (def r-post (partial remote "POST"))
 (def r-get  (partial remote "GET"))
 
-m(defmethod action :init [_]
+(defmethod action :init [_]
   (reset! state {:state :init})
   (r-get :list-tasks {} load-task-list!))
 
