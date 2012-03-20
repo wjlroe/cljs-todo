@@ -15,11 +15,13 @@ quick break down of app specific code:
 
 ## Usage
 
-Getting started should work just like [getting started with ClojurescriptOne](http://clojurescriptone.com/getting-started.html)
+Getting started is almost just like [getting started with ClojurescriptOne](http://clojurescriptone.com/getting-started.html),
+except that we need to install Datomic in our local maven repo.
 
 ```bash
 git clone git@github.com:calebphillips/cljs-todo.git
 cd cljs-todo
+mvn install:install-file -DgroupId=com.datomic -DartifactId=datomic -Dfile=datomic-DATOMIC-VERSION.jar -DpomFile=pom.xml
 lein bootstrap 
 lein repl
 ```
