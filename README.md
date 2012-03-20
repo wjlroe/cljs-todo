@@ -15,13 +15,25 @@ quick break down of app specific code:
 
 ## Usage
 
-Getting started is almost just like [getting started with ClojurescriptOne](http://clojurescriptone.com/getting-started.html),
-except that we need to install Datomic in our local maven repo.
+Getting started is for the most part, the same as [getting started with ClojurescriptOne](http://clojurescriptone.com/getting-started.html),
+except that you need to install Datomic in your local maven repo.
+
+See http://datomic.com/company/resources/getting-started and http://datomic.com/company/resources/integrating-peer-lib 
+for details on how to get Datomic into your local repo.  Basically, you just need to download the peer library, unzip it
+and run:
+
+```bash
+mvn install:install-file -DgroupId=com.datomic -DartifactId=datomic \
+    -Dfile=datomic-DATOMIC-VERSION.jar -DpomFile=pom.xml
+```
+
+Make sure your version of the jar file matches the dependency in the project.clj for cljs-todo.
+
+Once Datomic is in your maven repo, you should be able to start up cljs-todo:
 
 ```bash
 git clone git@github.com:calebphillips/cljs-todo.git
 cd cljs-todo
-mvn install:install-file -DgroupId=com.datomic -DartifactId=datomic -Dfile=datomic-DATOMIC-VERSION.jar -DpomFile=pom.xml
 lein bootstrap 
 lein repl
 ```
