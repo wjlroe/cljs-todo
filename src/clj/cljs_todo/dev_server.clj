@@ -14,8 +14,7 @@
         [one.templates :only (load-html apply-templates render)]
         [one.host-page :only (application-host)]
         [cljs-todo.api :only (remote-routes)]
-        [cljs-todo.config]
-        [cljs-todo.data :only (create-db)])
+        [cljs-todo.config])
   (:require [net.cgrand.enlive-html :as html]
             [one.reload :as reload])
   (:import java.io.File))
@@ -96,5 +95,4 @@
 (defn run-server
   "Start the development server on port 8080."
   []
-  (create-db)
   (run-jetty (var app) {:join? false :port 8080}))
