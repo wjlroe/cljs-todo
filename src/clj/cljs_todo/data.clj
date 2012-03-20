@@ -41,6 +41,10 @@
 ;; manually.  There may be a larger-scale change that makes this
 ;; unnecessary, but to preserve the current interface I need something
 ;; that passes back the newly added task with a unique id included.
+;;
+;; The Datomic team has a ticket for providing access to the generated
+;; entity ids:
+;;   https://groups.google.com/forum/#!topic/datomic/YB3LaRlRp7I
 (defonce ^:dynamic *task-id* (atom 10000))
 (defn- next-id [] (swap! *task-id* inc))
 
