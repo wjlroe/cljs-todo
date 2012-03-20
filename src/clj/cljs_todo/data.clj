@@ -1,12 +1,8 @@
 (ns cljs-todo.data
   (:require [datomic.api :as d]))
 
-;; TODO Figure out where to pass this in.
-;; Should it be a param to create-db and the fn will initialize a
-;; namespace private var?
-;;
-;; It also maybe that I should just initialize a connection at
-;; start up and save that.
+;; TODO Figure out/where how to pass in the uri and initialize the
+;; connection.  We don't need a 'new' connection for each operation
 (def ^:private
   uri "datomic:mem://todo")
 (def ^:private
@@ -36,6 +32,13 @@
   (let [conn (d/connect uri)]
     @(d/transact conn schema)))
 
+
+;; HACKISH I can't currently get the entity id back from the
+;; transaction to use as an identifier, so I am generating my own for
+;; now and handling the mapping between the id and the entity id
+;; manually.  There may be a larger-scale change that makes this
+;; unnecessary, but to preserve the current interface I need something
+;; that passes back the newly added task with a unique id included.
 (defonce ^:dynamic *task-id* (atom 10000))
 (defn- next-id [] (swap! *task-id* inc))
 
