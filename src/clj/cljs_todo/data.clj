@@ -46,27 +46,29 @@
           :where
           [?t :task/id ?i]] (d/db (d/connect uri)) id)))
 
+(defn- eid [t]
+  (if-let [id (:id t)]
+    (id->eid id)
+    (d/tempid :db.part/user)))
+
 (defn save-task [t]
-  (let [id (or (:id t)
-                 (next-id))
-          entity-id (if (:id t)
-                      (id->eid (:id t))
-                      (d/tempid :db.part/user))]
-      @(d/transact
-        (d/connect uri)
-        (map (fn [[k v]] {:db/id entity-id k v})
-             {:task/description (:description t)
-              :task/complete (boolean (:complete t))
-              :task/id id}))
-      (assoc t :id id)))
+  (let [id (or (:id t) (next-id))
+        entity-id (eid t)]
+    @(d/transact
+      (d/connect uri)
+      (map (fn [[k v]] {:db/id entity-id k v})
+           {:task/description (:description t)
+            :task/complete (boolean (:complete t))
+            :task/id id}))
+    (assoc t :id id)))
 
 (defn list-tasks []
-  (sort (fn [a b] (compare (:id a) (:id b)))
-        (map (fn [[id d c]] {:id id :description d :complete c})
-             (d/q '[:find ?i ?d ?c
-                    :where
-                    [?t :task/id ?i]
-                    [?t :task/description ?d]
-                    [?t :task/complete ?c]]
-                  (d/db (d/connect uri))))))
+  (sort-by :id
+           (map (fn [[id d c]] {:id id :description d :complete c})
+                (d/q '[:find ?i ?d ?c
+                       :where
+                       [?t :task/id ?i]
+                       [?t :task/description ?d]
+                       [?t :task/complete ?c]]
+                     (d/db (d/connect uri))))))
 
