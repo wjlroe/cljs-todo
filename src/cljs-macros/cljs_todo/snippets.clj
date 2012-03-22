@@ -19,4 +19,5 @@
   (reduce (fn [m [k v]] (assoc m k (render v))) {} 
           {:tasks (tasks)
            :task (snippet "tasks.html" [:li.not-completed])
-           :completed-task (snippet "tasks.html" [:li.completed]) }))
+           :completed-task (snippet "tasks.html" [:li.completed])
+           :login-form (snippet "login.html" [:#login-view])}))

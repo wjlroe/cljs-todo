@@ -54,6 +54,15 @@
   :state)
 
 (defmethod render :init [_]
+  (fx/initialize-views (map snippets [:login-form :tasks]))
+  (event/listen (by-id "login-button")
+                "click"
+                #(dispatch/fire :login)))
+
+(defmethod render :task-list [_]
+  (fx/show-task-list))
+
+(defmethod render :initold [_]
   (fx/initialize-task-views (:tasks snippets))
   (add-input-event-listeners "task-input")
   (event/listen (by-id "task-button")

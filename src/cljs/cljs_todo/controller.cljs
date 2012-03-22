@@ -42,8 +42,10 @@
 (def r-get  (partial remote "GET"))
 
 (defmethod action :init [_]
-  (reset! state {:state :init})
-  (r-get :list-tasks load-task-list!))
+  (reset! state {:state :init}))
+
+(defmethod action :login [_]
+  (reset! state {:state :task-list}))
 
 (defmethod action :add-task [{task :task}]
   (r-post :save-task {:task task} #(update-task-list! conj %)))
@@ -52,5 +54,5 @@
   (r-post :save-task {:task new}
           #(update-task-list! (fn [ls] (replace {old %} ls)))))
 
-(dispatch/react-to #{:init :add-task :update-task}
+(dispatch/react-to #{:init :add-task :update-task :login}
                    (fn [t d] (action (assoc d :type t))))

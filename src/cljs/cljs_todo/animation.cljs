@@ -2,8 +2,8 @@
   application."}
   cljs-todo.animation
   (:use [one.core :only (start)]
-        [one.browser.animation :only (play bind)]
-        [domina :only (by-id set-html! set-styles! destroy-children! single-node
+        [one.browser.animation :only (play play-animation parallel bind)]
+        [domina :only (by-id set-html! append! set-styles! destroy-children! single-node
                              add-class! remove-class!)]
         [domina.xpath :only (xpath)])
   (:require [goog.dom.forms :as gforms]
@@ -14,16 +14,31 @@
 
 (def task-form "//div[@id='task-form']")
 (def task-label "//label[@id='task-input-label']/span")
+(def login-form "//div[@id='login-form']")
 
-(defn initialize-task-views
-  [task-html]
+(def login-view "//div[@id='login-view']")
+(def tasks-view "//div[@id='tasks-view']")
+
+(defn initialize-views
+  [[login-html task-html]]
   (let [content (xpath "//div[@id='content']")]
     (destroy-children! content)
-    (set-html! content task-html)
-    ;; Required for IE8 to work correctly
-    (style/setOpacity (single-node (xpath task-label)) 1)
-    (set-styles! (by-id "task-button") {:opacity "0.2" :disabled true})
-    (play "//div[@id='content']" form-in {:after #(.focus (by-id "task-input") ())})))
+    (set-html! content login-html)
+    (append! content task-html)
+    (set-styles! (xpath tasks-view) {:opacity "0" :display "none" :margin-top "-260px"})
+    (play "//div[@id='content']" form-in {:after #(.focus (by-id "username") ())})))
+
+(def username-label "//label[@id='username-label']/span")
+(def password-label "//label[@id='password-label']/span")
+
+(defn show-task-list []
+  (let [e {:effect :fade :end 0 :time 500}]
+    (play-animation #(parallel (bind login-view e)
+                               (bind tasks-view
+                                     {:effect :color :time 500} ; Dummy animation for delay purposes
+                                     {:effect :fade-in-and-show :time 600}))
+                    {;; We need this next one because IE8 won't hide the button
+                     :after #(set-styles! (by-id "login-button") {:display "none"})})))
 
 (def fade-in {:effect :fade :end 1 :time 400})
 (def fade-out {:effect :fade :end 0 :time 400})
