@@ -25,7 +25,7 @@
     (destroy-children! content)
     (set-html! content login-html)
     (append! content task-html)
-    (set-styles! (xpath tasks-view) {:opacity "0" :display "none" :margin-top "-260px"})
+    (set-styles! (xpath tasks-view) {:opacity "0" :display "none" :margin-top "-200px"})
     (play "//div[@id='content']" form-in {:after #(.focus (by-id "username") ())})))
 
 (def username-label "//label[@id='username-label']/span")

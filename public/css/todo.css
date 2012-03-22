@@ -22,6 +22,14 @@ ul#task-list li {
     text-decoration: none;
 }
 
+#login-view {
+    height: 200px;
+}
+
+#login-view, #tasks-view {
+    width: 50%;
+}
+
 @font-face {
   font-family: "Chunkfive";
   src: url("fonts/Chunkfive-webfont.eot");
