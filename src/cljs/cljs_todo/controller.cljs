@@ -27,28 +27,29 @@
   (uri/getHost (.toString window.location ())))
 
 (defn remote
-  [method f data on-success]
-  (let [data-str (str "data=" (pr-str {:fn f :args data}))
-        query-str (when (= "GET" method) (str "?" data-str))
-        post-data (when (= "POST" method) data-str)]
-    (request f (str (host) "/remote" query-str)
-             :method method
-             :on-success #(on-success (reader/read-string (:body %)))
-             :on-error #(swap! state assoc :error "Error communicating with server.")
-             :content post-data)))
+  ([method f on-success] (remote method f {} on-success))
+  ([method f data on-success]
+     (let [data-str (str "data=" (pr-str {:fn f :args data}))
+           query-str (when (= "GET" method) (str "?" data-str))
+           post-data (when (= "POST" method) data-str)]
+       (request f (str (host) "/remote" query-str)
+                :method method
+                :on-success #(on-success (reader/read-string (:body %)))
+                :on-error #(swap! state assoc :error "Error communicating with server.")
+                :content post-data))))
 
 (def r-post (partial remote "POST"))
 (def r-get  (partial remote "GET"))
 
 (defmethod action :init [_]
   (reset! state {:state :init})
-  (r-get :list-tasks {} load-task-list!))
+  (r-get :list-tasks load-task-list!))
 
 (defmethod action :add-task [{task :task}]
-  (r-post :add-task {:task task} #(update-task-list! conj %)))
+  (r-post :save-task {:task task} #(update-task-list! conj %)))
 
 (defmethod action :update-task [{:keys [old new]}]
-  (r-post :update-task {:task new}
+  (r-post :save-task {:task new}
           #(update-task-list! (fn [ls] (replace {old %} ls)))))
 
 (dispatch/react-to #{:init :add-task :update-task}

@@ -16,10 +16,7 @@
 (defmethod remote :default [data]
   {:status :error :message "Unknown endpoint."})
 
-(defmethod remote :add-task [data]
-  (d/save-task (-> data :args :task)))
-
-(defmethod remote :update-task [data]
+(defmethod remote :save-task [data]
   (d/save-task (-> data :args :task)))
 
 (defmethod remote :list-tasks [data]
