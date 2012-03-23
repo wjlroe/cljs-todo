@@ -45,7 +45,8 @@
   (reset! state {:state :init}))
 
 (defmethod action :login [_]
-  (reset! state {:state :task-list}))
+  (reset! state {:state :task-list})
+  (r-get :list-tasks load-task-list!))
 
 (defmethod action :add-task [{task :task}]
   (r-post :save-task {:task task} #(update-task-list! conj %)))

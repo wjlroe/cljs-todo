@@ -25,20 +25,22 @@
     (destroy-children! content)
     (set-html! content login-html)
     (append! content task-html)
-    (set-styles! (xpath tasks-view) {:opacity "0" :display "none" :margin-top "-200px"})
+    (set-styles! (xpath tasks-view) {:opacity "0" :display "none"})
     (play "//div[@id='content']" form-in {:after #(.focus (by-id "username") ())})))
-
-(def username-label "//label[@id='username-label']/span")
-(def password-label "//label[@id='password-label']/span")
 
 (defn show-task-list []
   (let [e {:effect :fade :end 0 :time 500}]
-    (play-animation #(parallel (bind login-view e)
-                               (bind tasks-view
-                                     {:effect :color :time 500} ; Dummy animation for delay purposes
-                                     {:effect :fade-in-and-show :time 600}))
-                    {;; We need this next one because IE8 won't hide the button
-                     :after #(set-styles! (by-id "login-button") {:display "none"})})))
+    (play-animation #(parallel
+                      (bind login-view e)
+                      (bind tasks-view
+                            {:effect :color :time 500} ; Dummy animation for delay purposes
+                            {:effect :fade-in-and-show :time 600}))
+                    {:before #(do
+                                (set-styles! (xpath tasks-view) {:margin-top "-200px"}))
+                     :after #(do
+                               (set-styles! (xpath login-view) {:margin-left "-600px"})
+                               (gforms/setDisabled (by-id "task-input") false)
+                               (.focus (by-id "task-input") ()))})))
 
 (def fade-in {:effect :fade :end 1 :time 400})
 (def fade-out {:effect :fade :end 0 :time 400})

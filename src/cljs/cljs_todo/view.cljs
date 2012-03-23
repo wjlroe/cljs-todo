@@ -57,10 +57,16 @@
   (fx/initialize-views (map snippets [:login-form :tasks]))
   (event/listen (by-id "login-button")
                 "click"
-                #(dispatch/fire :login)))
+                #(dispatch/fire :login))
+  (add-input-event-listeners "task-input")
+  (event/listen (by-id "task-button")
+                "click"
+                #(dispatch/fire :form-submit)))
 
 (defmethod render :task-list [_]
-  (fx/show-task-list))
+  (fx/show-task-list)
+  (set-value! (by-id "task-input") "")
+  (dispatch/fire [:field-finished "task-input"]))
 
 (defmethod render :initold [_]
   (fx/initialize-task-views (:tasks snippets))
