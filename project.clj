@@ -5,7 +5,6 @@
                  [ring "1.0.0-RC1"]
                  [compojure "0.6.4"]
                  [enlive "1.0.0"]
-                 [com.datomic/datomic "0.1.2678"]
                  [org.mozilla/rhino "1.7R3"]
                  [com.google.javascript/closure-compiler "r1592"]
                  [org.clojure/google-closure-library "0.0-790"]]
